@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo 'Releasing'
                 with Credentials([[
-                    $class: 'AmazonWebServiceCredentialsBinding',
+                    $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'MyAWS',
                     accessKeyVariable: 'AWS_ACCESS_KEY']]){
                         sh(script: 'aws s3 cp /var/lib/jenkins/workspace/PipelineTest/index.html s3://prod-env-jenkins-20240416/')
