@@ -30,7 +30,7 @@ pipeline {
                 // Groovyスクリプト
                 script {
                     // URLの変数
-                    def url = 'https://test-env-jenkins-20240416.s3.ap-northeast-1.amazonaws.com/index1.html'
+                    def url = 'https://test-env-jenkins-20240416.s3.ap-northeast-1.amazonaws.com/index.html'
                     // ステータスコード変数
                     def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' '$url'", returnStdout: true)
 
