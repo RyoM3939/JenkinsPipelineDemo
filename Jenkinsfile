@@ -15,18 +15,33 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'MyAWS',
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]){
                         sh(script: 'aws s3 cp /var/lib/jenkins/workspace/PipelineTest/index.html s3://test-env-jenkins-20240416/')
-                }
+
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing'
+                // Groovyスクリプト
+                script {
+                    // URLの変数
+                    def url = 'https://test-env-jenkins-20240416.s3.ap-northeast-1.amazonaws.com/index.html'
+                    // ステータスコード変数
+                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' '$url'", returnStdout: true)
+
+                    if (response == '200') {
+                        echo 'Test OK'
+                    } else {
+                        echo response
+                        error 'Test NG'
+                    }
+                        
+                 }
             }
         }
         stage('Release') {
